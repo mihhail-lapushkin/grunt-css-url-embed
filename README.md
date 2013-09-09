@@ -37,7 +37,7 @@ Type: `String`
 
 Default: `.` or the directory of `Gruntfile.js`
 
-The base directory for URL's.
+The base directory for URL's. Can be absolute or relative to the directory of your `Gruntfile.js`.
 
 ### Usage Examples
 
