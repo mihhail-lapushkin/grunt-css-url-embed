@@ -1,0 +1,33 @@
+{
+  "name": "grunt-css-url-embed",
+  "description": "Embed URL's as base64 strings inside your stylesheets",
+  "version": "0.1.0",
+  "homepage": "https://github.com/mihhail-lapushkin/grunt-css-url-embed",
+  "author": {
+    "name": "Mihhail Lapushkin",
+    "email": "miha@smail.ee",
+    "url": "http://www.linkedin.com/in/mihhail"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mihhail-lapushkin/grunt-css-url-embed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues"
+  },
+  "licenses": [ {
+    "type": "MIT",
+    "url": "https://github.com/mihhail-lapushkin/grunt-css-url-embed/blob/master/LICENSE-MIT"
+  } ],
+  "main": "Gruntfile.js",
+  "engines": {
+    "node": ">=0.8.0"
+  },
+  "dependencies": {
+    "datauri": ">= 0.1"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.0"
+  },
+  "keywords": [ "gruntplugin", "image", "data-uri", "base64", "encode", "embed", "css", "url" ]
+}
