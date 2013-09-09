@@ -3,7 +3,8 @@
 > Embed URL's as base64 data URI's inside your stylesheets
 
 There are lots of base64 embedding Grunt plugins out there, but pretty much all of them are already outdated and/or abandoned. This plugin aims to change that.
-Most of the codebase is donater from [datauri](https://github.com/ahomu/grunt-data-uri) plugin.
+
+Most of the codebase is donated from [datauri](https://github.com/ahomu/grunt-data-uri) plugin.
 
 
 ## Getting Started
@@ -33,6 +34,7 @@ URL's are encoded with [datauri](https://github.com/heldr/datauri). Both image a
 #### baseDir
 
 Type: `String`
+
 Default: `.` or the directory of `Gruntfile.js`
 
 The base directory for URL's.
@@ -80,4 +82,4 @@ cssUrlEmbed: {
 
 ## Release History
 
- * 2013-XX-XX   v0.1.0   First version.
+ * 2013-09-09   v0.1.0   First version.
