@@ -10,9 +10,10 @@
 
 module.exports = function(grunt) {
   var URL_REGEX = /(?:url\(["']?)(.*?)(?:["']?\))/;
-
+  
+  var fs = require('fs');
   var path = require('path');
-  var datauri = require('datauri');
+  var mime = require('mime');
 
   grunt.registerMultiTask('cssUrlEmbed', "Embed URL's as base64 strings inside your stylesheets", function() {
     var options = this.options();
@@ -58,8 +59,7 @@ module.exports = function(grunt) {
 
       extractedUrls.forEach(function(url) {
         var urlFullPath = path.resolve(baseDir + '/' + url);
-        var dataUri;
-        
+
         grunt.log.debug('"' + url + '" resolved to "' + urlFullPath + '"');
 
         if (!grunt.file.exists(urlFullPath)) {
@@ -67,11 +67,13 @@ module.exports = function(grunt) {
           return;
         }
 
-        dataUri = datauri(urlFullPath);
-
-        grunt.log.ok('"' + url + '" embedded');
-
+        var base64Content = fs.readFileSync(urlFullPath, 'base64');
+        var mimeType = mime.lookup(urlFullPath);
+        var dataUri = 'data:' + mimeType + ';base64,' + base64Content;
+        
         source = source.replace(new RegExp(url, 'g'), dataUri);
+        
+        grunt.log.ok('"' + url + '" embedded');
       });
 
       return source;
