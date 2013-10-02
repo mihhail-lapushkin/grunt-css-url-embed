@@ -39,12 +39,12 @@ module.exports = function(grunt) {
     });
   });
 
-  var embedUrls = function(f, options) {
+  function embedUrls(f, options) {
     try {
       var source = grunt.file.read(f);
       var baseDir = path.resolve(options.baseDir ? options.baseDir : path.dirname(f));
       var allUrls = source.match(new RegExp(URL_REGEX.source, 'g')) || [];
-      var targetUrls = allUrls.filter(function(url) { return !url.match('(data:|http)'); });
+      var targetUrls = allUrls.filter(function(url) { return !url.match('(data:|http[s]*:)'); });
       var uniqTargetUrls = grunt.util._.uniq(targetUrls);
       var extractedUrls = uniqTargetUrls.map(function(url) { return url.match(URL_REGEX)[1]; });
 
@@ -53,14 +53,18 @@ module.exports = function(grunt) {
         return source;
       }
 
-      grunt.log.debug('Using "' + baseDir + '" as base directory for URL\'s');
+      if (grunt.option('verbose')) {
+        grunt.log.writeln('Using "' + baseDir + '" as base directory for local URL\'s');
+      }
 
       grunt.log.writeln(uniqTargetUrls.length + " embeddable URL" + (uniqTargetUrls.length > 1 ? "'s" : "") + " found");
 
       extractedUrls.forEach(function(url) {
         var urlFullPath = path.resolve(baseDir + '/' + url);
 
-        grunt.log.debug('"' + url + '" resolved to "' + urlFullPath + '"');
+        if (grunt.option('verbose')) {
+          grunt.log.writeln('"' + url + '" resolved to "' + urlFullPath + '"');
+        }
 
         if (!grunt.file.exists(urlFullPath)) {
           grunt.log.warn('"' + url + '" seems to be wrong');
@@ -81,5 +85,5 @@ module.exports = function(grunt) {
       grunt.log.error(e);
       grunt.fail.warn('URL embed failed!');
     }
-  };
+  }
 };

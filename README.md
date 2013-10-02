@@ -27,7 +27,7 @@ _Run this task with the `grunt cssUrlEmbed` command._
 
 Task targets, files and options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
 
-Both image and font URL's are supported. Web URL's are not supported ATM.
+Both image and font URL's are supported. Web URL's won't be supported.
 
 ### Options
 
@@ -82,5 +82,6 @@ cssUrlEmbed: {
 
 ## Release History
 
- * 2013-09-17  v0.1.1  Removed dependency on [datauri](https://github.com/heldr/datauri). Now pretty much all MIME types are supported.
- * 2013-09-09  v0.1.0  First version.
+ * 2013-10-02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Changed logging a bit.
+ * 2013-09-17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removed dependency on [datauri](https://github.com/heldr/datauri). Now pretty much all MIME types are supported.
+ * 2013-09-09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First version.
