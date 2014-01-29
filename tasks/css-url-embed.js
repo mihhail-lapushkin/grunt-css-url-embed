@@ -54,12 +54,26 @@ module.exports = function(grunt) {
       }
 
       if (grunt.option('verbose')) {
-        grunt.log.writeln('Using "' + baseDir + '" as base directory for local URL\'s');
+        grunt.log.writeln('Using "' + baseDir + '" as base directory for URL\'s');
       }
 
       grunt.log.writeln(uniqTargetUrls.length + " embeddable URL" + (uniqTargetUrls.length > 1 ? "'s" : "") + " found");
 
-      extractedUrls.forEach(function(url) {
+      extractedUrls.forEach(function(rawUrl, i) {
+       	if (grunt.option('verbose')) {
+          grunt.log.writeln('\n[ #' + (i + 1) + ' ]');
+        }
+      
+      	var url = rawUrl;
+      
+      	if (rawUrl.indexOf('?') >= 0) {
+      		url = rawUrl.split('?')[0];
+      		
+        	if (grunt.option('verbose')) {
+          	grunt.log.writeln('"' + rawUrl + '" trimmed to "' + url + '"');
+        	}
+      	}
+      
         var urlFullPath = path.resolve(baseDir + '/' + url);
 
         if (grunt.option('verbose')) {
@@ -67,17 +81,18 @@ module.exports = function(grunt) {
         }
 
         if (!grunt.file.exists(urlFullPath)) {
-          grunt.log.warn('"' + url + '" seems to be wrong');
+          grunt.log.warn('"' + (grunt.option('verbose') ? urlFullPath : url) + '" not found on disk');
           return;
         }
 
         var base64Content = fs.readFileSync(urlFullPath, 'base64');
         var mimeType = mime.lookup(urlFullPath);
         var dataUri = 'data:' + mimeType + ';base64,' + base64Content;
+        var escapedRawUrl = rawUrl.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
         
-        source = source.replace(new RegExp(url, 'g'), dataUri);
+        source = source.replace(new RegExp(escapedRawUrl, 'g'), dataUri);
         
-        grunt.log.ok('"' + url + '" embedded');
+        grunt.log.ok('"' + rawUrl + '" embedded');
       });
 
       return source;

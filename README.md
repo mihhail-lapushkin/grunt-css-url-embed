@@ -82,6 +82,7 @@ cssUrlEmbed: {
 
 ## Release History
 
+ * 2014-01-29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fixed handling of URL's with parameters. Improved logging.
  * 2013-10-02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Changed logging a bit.
  * 2013-09-17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removed dependency on [datauri](https://github.com/heldr/datauri). Now pretty much all MIME types are supported.
  * 2013-09-09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First version.
