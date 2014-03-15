@@ -1,5 +1,7 @@
 # grunt-css-url-embed
 
+![](https://david-dm.org/mihhail-lapushkin/grunt-css-url-embed.png)
+
 > Embed URL's as base64 data URI's inside your stylesheets
 
 There are lots of base64 embedding Grunt plugins out there, but pretty much all of them are already outdated and/or abandoned. This plugin aims to change that.
