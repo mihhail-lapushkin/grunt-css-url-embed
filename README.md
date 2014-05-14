@@ -81,9 +81,24 @@ cssUrlEmbed: {
 }
 ```
 
+#### Exclude file types
+```js
+cssUrlEmbed: {
+  options: {
+    exclude: ['woff','ttf','eot','svn#']
+  }
+  encode: {
+    expand: true,
+    cwd: 'target/css',
+    src: [ '**/*.css' ],
+    dest: 'target/css'
+  }
+}
+```
+
 
 ## Release History
-
+ * 2014-01-29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Added option to exclude certain file extensions
  * 2014-01-29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fixed handling of URL's with parameters. Improved logging.
  * 2013-10-02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Changed logging a bit.
  * 2013-09-17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removed dependency on [datauri](https://github.com/heldr/datauri). Now pretty much all MIME types are supported.
