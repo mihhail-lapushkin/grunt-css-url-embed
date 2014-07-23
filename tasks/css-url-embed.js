@@ -9,7 +9,8 @@
 'use strict';
 
 module.exports = function(grunt) {
-  var URL_REGEX = /(?:url\(["']?)(.*?)(?:["']?\))/;
+  var URL_REGEX = /(?:url\(["']?)(.*?)(?:["']?\)(.*))/;
+  var URL_FILTERING_REGEX = /(data:|http[s]*:|\/\*\s*noembed\s*\*\/)/;
   
   var fs = require('fs');
   var path = require('path');
@@ -17,7 +18,8 @@ module.exports = function(grunt) {
   
   grunt.registerMultiTask('cssUrlEmbed', "Embed URL's as base64 strings inside your stylesheets", function() {
     var options = this.options({
-      excludeUrlExtensions: []
+      excludeUrlExtensions: [],
+      failOnMissingUrl: true
     });
     
     this.files.forEach(function(f) {
@@ -46,11 +48,11 @@ module.exports = function(grunt) {
       var source = grunt.file.read(f);
       var baseDir = path.resolve(options.baseDir ? options.baseDir : path.dirname(f));
       var allUrls = source.match(new RegExp(URL_REGEX.source, 'g')) || [];
-      var targetUrls = allUrls.filter(function(url) { return !url.match('(data:|http[s]*:)'); });
-      var uniqTargetUrls = grunt.util._.uniq(targetUrls);
-      var extractedUrls = uniqTargetUrls.map(function(url) { return url.match(URL_REGEX)[1]; });
+      var filteredUrls = allUrls.filter(function(url) { return !url.match(URL_FILTERING_REGEX); });
+      var uniqFilteredUrls = grunt.util._.uniq(filteredUrls);
+      var extractedUrls = uniqFilteredUrls.map(function(url) { return url.match(URL_REGEX)[1]; });
       
-      if (targetUrls.length === 0) {
+      if (filteredUrls.length === 0) {
         grunt.log.writeln("Nothing to embed here!");
         return source;
       }
@@ -59,7 +61,7 @@ module.exports = function(grunt) {
         grunt.log.writeln('Using "' + baseDir + '" as base directory for URL\'s');
       }
       
-      grunt.log.writeln(uniqTargetUrls.length + " embeddable URL" + (uniqTargetUrls.length > 1 ? "'s" : "") + " found");
+      grunt.log.writeln(uniqFilteredUrls.length + " embeddable URL" + (uniqFilteredUrls.length > 1 ? "'s" : "") + " found");
       
       extractedUrls.forEach(function(rawUrl, i) {
         if (grunt.option('verbose')) {
@@ -76,14 +78,6 @@ module.exports = function(grunt) {
           }
         }
         
-        var ext = url.split('.').pop();
-        var shouldSkip = options.excludeUrlExtensions.filter(function(excludedExt) { return excludedExt === ext; }).length > 0;
-
-        if (shouldSkip) {
-        	grunt.log.ok('"' + url + '" skipped due to excluded extension "' + ext + '"');
-        	return;
-        }
-        
         var urlFullPath = path.resolve(baseDir + '/' + url);
         
         if (grunt.option('verbose')) {
@@ -91,7 +85,14 @@ module.exports = function(grunt) {
         }
         
         if (!grunt.file.exists(urlFullPath)) {
-          grunt.log.warn('"' + (grunt.option('verbose') ? urlFullPath : url) + '" not found on disk');
+          var missingUrlMessage = '"' + (grunt.option('verbose') ? urlFullPath : url) + '" not found on disk';
+          
+          if (options.failOnMissingUrl) {
+            grunt.fail.warn(missingUrlMessage + '.');
+          }
+          
+          grunt.log.warn(missingUrlMessage);
+          
           return;
         }
         

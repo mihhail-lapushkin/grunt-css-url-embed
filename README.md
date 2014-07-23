@@ -41,6 +41,18 @@ Default: `.` or the directory of `Gruntfile.js`
 
 The base directory for URL's. Can be absolute or relative to the directory of your `Gruntfile.js`.
 
+#### failOnMissingUrl
+
+Type: `Boolean`
+
+Default: `true`
+
+Will the script terminate if the file referenced by the URL is missing?
+
+### Excluding URL's
+
+You can mark certain URL's to be skipped by this task using the `/* noembed */` comment.
+
 ### Usage Examples
 
 #### Map input and output files directly
@@ -81,24 +93,26 @@ cssUrlEmbed: {
 }
 ```
 
-#### Exclude URL's by file extension
-```js
-cssUrlEmbed: {
-  options: {
-    excludeUrlExtensions: [ 'php' ]
-  },
-  encode: {
-    expand: true,
-    cwd: 'target/css',
-    src: [ '**/*.css' ],
-    dest: 'target/css'
-  }
+#### Excluding URL's
+```css
+.exclude-me {
+  background-image: url('exclude_me.png'); /* noembed */
 }
 ```
 
 ## Release History
- * 2014-05-14&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.4&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Added option to exclude certain file extensions.
- * 2014-01-29&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.3&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fixed handling of URL's with parameters. Improved logging.
- * 2013-10-02&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.2&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Changed logging a bit.
- * 2013-09-17&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Removed dependency on [datauri](https://github.com/heldr/datauri). Now pretty much all MIME types are supported.
- * 2013-09-09&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v0.1.0&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;First version.
+ * **1.0.0** / 2014-07-23
+   * Added an option to fail the build if the URL is missing.
+   * Replaced excluding by file extension with excluding through a comment in the CSS file.
+ * **0.1.4** / 2014-05-14
+   * Added an option to exclude certain file extensions.
+ * **0.1.3** / 2014-01-29
+   * Fixed handling of URL's with parameters.
+   * Improved logging.
+ * **0.1.2** / 2013-10-02
+   * Changed logging a bit.
+ * **0.1.1** / 2013-09-17
+   * Removed dependency on [datauri](https://github.com/heldr/datauri).
+   * Now pretty much all MIME types are supported.
+ * **0.1.0** / 2013-09-09
+   * First version.
