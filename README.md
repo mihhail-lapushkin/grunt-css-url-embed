@@ -49,6 +49,8 @@ Default: `true`
 
 Will the script terminate if the file referenced by the URL is missing?
 
+When set to `false` a warning will be produced for each missing file.
+
 ### Excluding URL's
 
 You can mark certain URL's to be skipped by this task using the `/* noembed */` comment.
@@ -102,7 +104,7 @@ cssUrlEmbed: {
 
 ## Release History
  * **1.0.0** / 2014-07-23
-   * Added an option to fail the build if the URL is missing.
+   * The build will now fail if the file referenced by the URL is missing. Set `failOnMissingUrl` to `false` to disable this.
    * Replaced excluding by file extension with excluding through a comment in the CSS file.
  * **0.1.4** / 2014-05-14
    * Added an option to exclude certain file extensions.
