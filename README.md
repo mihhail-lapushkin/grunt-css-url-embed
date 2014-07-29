@@ -30,7 +30,7 @@ _Run this task with the `grunt cssUrlEmbed` command._
 
 Task targets, files and options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
 
-Both image and font URL's are supported. Web URL's won't be supported.
+Both image and font URL's are supported. Web URL's are not supported. If you really need them, write a feature request.
 
 ### Options
 
