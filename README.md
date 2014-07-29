@@ -1,5 +1,6 @@
 # grunt-css-url-embed
 
+![](https://badge.fury.io/js/grunt-css-url-embed.svg)&nbsp;&nbsp;
 ![](https://david-dm.org/mihhail-lapushkin/grunt-css-url-embed.png)
 
 > Embed URL's as base64 data URI's inside your stylesheets
