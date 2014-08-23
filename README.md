@@ -104,6 +104,8 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.0.1** / 2014-08-23
+   * Fixed [#6](/../../issues/6).
  * **1.0.0** / 2014-07-23
    * The build will now fail if the file referenced by the URL is missing. Set `failOnMissingUrl` to `false` to disable this.
    * Replaced excluding by file extension with excluding through a comment in the CSS file.

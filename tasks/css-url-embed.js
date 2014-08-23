@@ -98,10 +98,11 @@ module.exports = function(grunt) {
         
         var base64Content = fs.readFileSync(urlFullPath, 'base64');
         var mimeType = mime.lookup(urlFullPath);
-        var dataUri = 'data:' + mimeType + ';base64,' + base64Content;
+        var dataUri = '("data:' + mimeType + ';base64,' + base64Content + '")';
         var escapedRawUrl = rawUrl.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+        var rawUrlRegex = '\\([\'"]?' + escapedRawUrl + '[\'"]?\\)';
         
-        source = source.replace(new RegExp(escapedRawUrl, 'g'), dataUri);
+        source = source.replace(new RegExp(rawUrlRegex, 'g'), dataUri);
         
         grunt.log.ok('"' + rawUrl + '" embedded');
       });
