@@ -1,7 +1,7 @@
 {
   "name": "grunt-css-url-embed",
   "description": "Embed URL's as base64 strings inside your stylesheets",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "homepage": "https://github.com/mihhail-lapushkin/grunt-css-url-embed",
   "author": {
     "name": "Mihhail Lapushkin",
@@ -15,21 +15,15 @@
   "bugs": {
     "url": "https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues"
   },
-  "licenses": [
-    {
-      "type": "MIT",
-      "url": "https://github.com/mihhail-lapushkin/grunt-css-url-embed/blob/master/LICENSE-MIT"
-    }
-  ],
-  "main": "Gruntfile.js",
+  "licenses": [{
+    "type": "MIT",
+    "url": "https://github.com/mihhail-lapushkin/grunt-css-url-embed/blob/master/LICENSE-MIT"
+  }],
   "engines": {
     "node": ">=0.8.0"
   },
   "dependencies": {
     "mime": "1.2.11"
-  },
-  "devDependencies": {
-    "grunt": "~0.4.0"
   },
   "keywords": [
     "gruntplugin",

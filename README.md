@@ -26,8 +26,6 @@ grunt.loadNpmTasks('grunt-css-url-embed');
 ```
 
 ## cssUrlEmbed task
-_Run this task with the `grunt cssUrlEmbed` command._
-
 Task targets, files and options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
 
 Both image and font URL's are supported. Web URL's are not supported. If you really need them, write a feature request.
@@ -104,6 +102,9 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.0.2** / 2014-08-23
+   * Fixed [#7](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/7).
+   * Project cleanup.
  * **1.0.1** / 2014-08-23
    * Fixed [#6](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/6).
  * **1.0.0** / 2014-07-23

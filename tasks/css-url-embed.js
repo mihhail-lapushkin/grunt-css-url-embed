@@ -1,16 +1,6 @@
-/*
- * grunt-css-url-embed
- * https://github.com/mihhail-lapushkin/grunt-css-url-embed
- *
- * Copyright (c) 2013 Mihhail Lapushkin
- * Licensed under the MIT license.
- */
- 
-'use strict';
-
 module.exports = function(grunt) {
-  var URL_REGEX = /(?:url\(["']?)(.*?)(?:["']?\)(.*))/;
-  var URL_FILTERING_REGEX = /(data:|http[s]*:|\/\*\s*noembed\s*\*\/)/;
+  var URL_REGEX = /url\(["']?([^"'\(\)]+?)["']?\)\;(?!\s*?\/\*\s*?noembed\s*?\*\/)/;
+  var URL_FILTERING_REGEX = /^(data|http|https):/;
   
   var fs = require('fs');
   var path = require('path');
@@ -47,12 +37,17 @@ module.exports = function(grunt) {
     try {
       var source = grunt.file.read(f);
       var baseDir = path.resolve(options.baseDir ? options.baseDir : path.dirname(f));
-      var allUrls = source.match(new RegExp(URL_REGEX.source, 'g')) || [];
-      var filteredUrls = allUrls.filter(function(url) { return !url.match(URL_FILTERING_REGEX); });
-      var uniqFilteredUrls = grunt.util._.uniq(filteredUrls);
-      var extractedUrls = uniqFilteredUrls.map(function(url) { return url.match(URL_REGEX)[1]; });
+      var urlRegex = new RegExp(URL_REGEX.source, 'g');
+      var allUrls = [];
+      var match;
       
-      if (filteredUrls.length === 0) {
+      while ((match = urlRegex.exec(source))) {
+        allUrls.push(match[1]);
+      }
+      
+      var embeddableUrls = allUrls.filter(function(url) { return !url.match(URL_FILTERING_REGEX); });
+      
+      if (embeddableUrls.length === 0) {
         grunt.log.writeln("Nothing to embed here!");
         return source;
       }
@@ -61,9 +56,11 @@ module.exports = function(grunt) {
         grunt.log.writeln('Using "' + baseDir + '" as base directory for URL\'s');
       }
       
-      grunt.log.writeln(uniqFilteredUrls.length + " embeddable URL" + (uniqFilteredUrls.length > 1 ? "'s" : "") + " found");
+      var uniqEmbeddableUrls = grunt.util._.uniq(embeddableUrls);
       
-      extractedUrls.forEach(function(rawUrl, i) {
+      grunt.log.writeln(uniqEmbeddableUrls.length + " embeddable URL" + (uniqEmbeddableUrls.length > 1 ? "'s" : "") + " found");
+      
+      uniqEmbeddableUrls.forEach(function(rawUrl, i) {
         if (grunt.option('verbose')) {
           grunt.log.writeln('\n[ #' + (i + 1) + ' ]');
         }
@@ -106,6 +103,7 @@ module.exports = function(grunt) {
         
         grunt.log.ok('"' + rawUrl + '" embedded');
       });
+      
       return source;
     } catch (e) {
       grunt.log.error(e);
