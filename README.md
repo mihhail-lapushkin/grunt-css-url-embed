@@ -102,7 +102,7 @@ cssUrlEmbed: {
 ```
 
 ## Release History
- * **1.0.2** / 2014-08-23
+ * **1.0.2** / 2014-09-03
    * Fixed [#7](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/7).
    * Project cleanup.
  * **1.0.1** / 2014-08-23
