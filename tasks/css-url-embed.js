@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-  var URL_REGEX = /url\(["']?([^"'\(\)]+?)["']?\)\;(?!\s*?\/\*\s*?noembed\s*?\*\/)/;
+  var URL_REGEX = /url\(["']?([^"'\(\)]+?)["']?\)[;, ](?!\s*?\/\*\s*?noembed\s*?\*\/)/;
   var URL_FILTERING_REGEX = /^(data|http|https):/;
   
   var fs = require('fs');
