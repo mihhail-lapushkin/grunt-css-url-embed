@@ -50,7 +50,17 @@ Will the script terminate if the file referenced by the URL is missing?
 
 When set to `false` a warning will be produced for each missing file.
 
-### Excluding URL's
+#### skipUrlsLargerThan
+
+Type: `String`
+
+Default: -
+
+Skip URL's that are larger than the specified value.
+
+For example: `'5 MB'`, `'30 KB'`, `'300 B'`.
+
+### Excluding URL's manually
 
 You can mark certain URL's to be skipped by this task using the `/* noembed */` comment.
 
@@ -94,7 +104,23 @@ cssUrlEmbed: {
 }
 ```
 
-#### Excluding URL's
+#### Exclude URL's by size
+```js
+cssUrlEmbed: {
+  encode: {
+    options: {
+      skipUrlsLargerThan: '5 MB'
+    },
+  
+    expand: true,
+    cwd: 'target/css',
+    src: [ '**/*.css' ],
+    dest: 'target/css'
+  }
+}
+```
+
+#### Excluding URL's manually
 ```css
 .exclude-me {
   background-image: url('exclude_me.png'); /* noembed */
@@ -102,6 +128,9 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.0.4** / 2014-09-26
+   * Implemented [#11](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/11).
+   * Marged [#10](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/10).
  * **1.0.3** / 2014-09-05
    * Fixed [#8](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/8).
  * **1.0.2** / 2014-09-03

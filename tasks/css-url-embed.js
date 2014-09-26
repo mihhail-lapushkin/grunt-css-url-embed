@@ -1,10 +1,11 @@
 module.exports = function(grunt) {
-  var URL_REGEX = /url\(["']?([^"'\(\)]+?)["']?\)[};, ](?!\s*?\/\*\s*?noembed\s*?\*\/)/;
+  var URL_REGEX = /url\(["']?([^"'\(\)]+?)["']?\)[};,\s](?!\s*?\/\*\s*?noembed\s*?\*\/)/;
   var URL_FILTERING_REGEX = /^(data|http|https):/;
   
   var fs = require('fs');
   var path = require('path');
   var mime = require('mime');
+  var units = require('node-units');
   
   grunt.registerMultiTask('cssUrlEmbed', "Embed URL's as base64 strings inside your stylesheets", function() {
     var options = this.options({
@@ -89,6 +90,14 @@ module.exports = function(grunt) {
           }
           
           grunt.log.warn(missingUrlMessage);
+          
+          return;
+        }
+        
+        var urlFileSize = fs.statSync(urlFullPath)['size'];
+        
+        if (options.skipUrlsLargerThan && urlFileSize > units.convert(options.skipUrlsLargerThan + ' to B')) {
+          grunt.log.warn('"' + (grunt.option('verbose') ? urlFullPath : url) + '" is too big');
           
           return;
         }
