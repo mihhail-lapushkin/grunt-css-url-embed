@@ -7,8 +7,6 @@
 
 There are lots of base64 embedding Grunt plugins out there, but pretty much all of them are already outdated and/or abandoned. This plugin aims to change that.
 
-Most of the codebase is donated from [datauri](https://github.com/ahomu/grunt-data-uri) plugin.
-
 
 ## Getting Started
 This plugin requires Grunt `~0.4.0`
@@ -28,7 +26,7 @@ grunt.loadNpmTasks('grunt-css-url-embed');
 ## cssUrlEmbed task
 Task targets, files and options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
 
-Both image and font URL's are supported. Web URL's are not supported. If you really need them, write a feature request.
+Both image and font URL's are supported. Remote(http/https) URL's are supported as well.
 
 ### Options
 
@@ -46,15 +44,15 @@ Type: `Boolean`
 
 Default: `true`
 
-Will the script terminate if the file referenced by the URL is missing?
+Will the script terminate if the file referenced by the URL is missing or the request to get it failed?
 
-When set to `false` a warning will be produced for each missing file.
+When set to `false` a warning will be produced for each missing file or failed request.
 
 #### skipUrlsLargerThan
 
 Type: `String`
 
-Default: -
+Default: No restrictions
 
 Skip URL's that are larger than the specified value.
 
@@ -128,6 +126,9 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.1.0** / 2014-10-01
+   * Implemented [#12](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/12).
+   * Switched to MIME type sniffing instead of just checking the extension of the file.
  * **1.0.4** / 2014-09-26
    * Implemented [#11](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/11).
    * Marged [#10](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/10).

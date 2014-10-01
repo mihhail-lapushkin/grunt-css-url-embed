@@ -1,122 +1,197 @@
 module.exports = function(grunt) {
   var URL_REGEX = /url\(["']?([^"'\(\)]+?)["']?\)[};,\s](?!\s*?\/\*\s*?noembed\s*?\*\/)/;
-  var URL_FILTERING_REGEX = /^(data|http|https):/;
+  var URL_EXCLUDE_REGEX = /^data:/;
+  var REMOTE_URL_REGEX = /^(http|https):/;
   
   var fs = require('fs');
   var path = require('path');
-  var mime = require('mime');
   var units = require('node-units');
+  var request = require('request');
+  var mmmagic = require('mmmagic');
+  var mimeType = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE);
   
-  grunt.registerMultiTask('cssUrlEmbed', "Embed URL's as base64 strings inside your stylesheets", function() {
-    var options = this.options({
-      excludeUrlExtensions: [],
-      failOnMissingUrl: true
-    });
+  function isTooBig(size, options) {
+    return options.skipUrlsLargerThan && size > units.convert(options.skipUrlsLargerThan + ' to B');
+  }
+  
+  function embedUrlAndGoToNext(url, urlContent, fileContent, nextUrl) {
+    var urlContentInBuffer = new Buffer(urlContent);
     
-    this.files.forEach(function(f) {
-      var inputFile = f.src.filter(function(filepath) {
-        if (!grunt.file.exists(filepath)) {
-          grunt.log.warn('Source file "' + filepath + '" not found');
-          return false;
-        } else {
-          return true;
-        }
-      });
+    mimeType.detect(urlContentInBuffer, function(error, mimeType) {
+      if (error) {
+        mimeType = 'application/octet-stream';
+        grunt.log.warn('Failed to get MIME type of "' + url + '". Defaulting to "' + mimeType + '".');
+      }
       
-      var outputContent = inputFile.map(function(f) {
-        grunt.log.subhead('Processing source file "' + f + '"');
-        
-        return embedUrls(f, options);
-      }).join('');
+      var base64Content = urlContentInBuffer.toString('base64');
+      var dataUri = '("data:' + mimeType + ';base64,' + base64Content + '")';
+      var escapedUrl = url.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+      var embedUrlRegex = '\\([\'"]?' + escapedUrl + '[\'"]?\\)';
       
-      grunt.file.write(f.dest, outputContent);
-      grunt.log.writeln('File "' + f.dest + '" created');
+      fileContent.content = fileContent.content.replace(new RegExp(embedUrlRegex, 'g'), dataUri);
+      
+      grunt.log.ok('"' + url + '" embedded');
+      
+      nextUrl();
     });
-  });
+  }
+
+  function processNextUrl(fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback) {
+    if (++currentUrlIndex === urlArray.length) {
+      finishCallback();
+    } else {
+      processUrl(fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback);
+    }
+  }
   
-  function embedUrls(f, options) {
+  function processUrl(fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback) {
+    var url = urlArray[currentUrlIndex];
+    var nextUrl = processNextUrl.bind(null,
+                                      fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback);
+    
     try {
-      var source = grunt.file.read(f);
-      var baseDir = path.resolve(options.baseDir ? options.baseDir : path.dirname(f));
-      var urlRegex = new RegExp(URL_REGEX.source, 'g');
-      var allUrls = [];
-      var match;
-      
-      while ((match = urlRegex.exec(source))) {
-        allUrls.push(match[1]);
+      if (isVerbose) {
+        grunt.log.writeln('\n[ #' + (currentUrlIndex + 1) + ' ]');
       }
       
-      var embeddableUrls = allUrls.filter(function(url) { return !url.match(URL_FILTERING_REGEX); });
-      
-      if (embeddableUrls.length === 0) {
-        grunt.log.writeln("Nothing to embed here!");
-        return source;
-      }
-      
-      if (grunt.option('verbose')) {
-        grunt.log.writeln('Using "' + baseDir + '" as base directory for URL\'s');
-      }
-      
-      var uniqEmbeddableUrls = grunt.util._.uniq(embeddableUrls);
-      
-      grunt.log.writeln(uniqEmbeddableUrls.length + " embeddable URL" + (uniqEmbeddableUrls.length > 1 ? "'s" : "") + " found");
-      
-      uniqEmbeddableUrls.forEach(function(rawUrl, i) {
-        if (grunt.option('verbose')) {
-          grunt.log.writeln('\n[ #' + (i + 1) + ' ]');
-        }
-        
-        var url = rawUrl;
-        
-        if (rawUrl.indexOf('?') >= 0) {
-          url = rawUrl.split('?')[0];
+      if (REMOTE_URL_REGEX.test(url)) {
+        request({ url: url, encoding: null }, function(error, response, body) {
+          if (error || response.statusCode !== 200) {
+            var failedUrlMessage = '"' + url + '" request failed';
+            
+            if (options.failOnMissingUrl) {
+              grunt.fail.warn(failedUrlMessage + '\n');
+            }
+            
+            if (error) {
+              grunt.log.error(error);
+            }
+            
+            grunt.log.warn(failedUrlMessage);
+            
+            return nextUrl();
+          }
           
-          if (grunt.option('verbose')) {
-            grunt.log.writeln('"' + rawUrl + '" trimmed to "' + url + '"');
+          if (isTooBig(body.length, options)) {
+            grunt.log.warn('"' + url + '" is too big');
+            
+            return nextUrl();
+          }
+          
+          embedUrlAndGoToNext(url, body, fileContent, nextUrl);
+        });
+      } else {
+        var noArgumentUrl = url;
+        
+        if (url.indexOf('?') >= 0) {
+          noArgumentUrl = url.split('?')[0];
+          
+          if (isVerbose) {
+            grunt.log.writeln('"' + url + '" trimmed to "' + noArgumentUrl + '"');
           }
         }
         
-        var urlFullPath = path.resolve(baseDir + '/' + url);
+        var urlFullPath = path.resolve(baseDir + '/' + noArgumentUrl);
         
-        if (grunt.option('verbose')) {
+        if (isVerbose) {
           grunt.log.writeln('"' + url + '" resolved to "' + urlFullPath + '"');
         }
         
         if (!grunt.file.exists(urlFullPath)) {
-          var missingUrlMessage = '"' + (grunt.option('verbose') ? urlFullPath : url) + '" not found on disk';
+          var missingUrlMessage = '"' + (isVerbose ? urlFullPath : url) + '" not found on disk';
           
           if (options.failOnMissingUrl) {
-            grunt.fail.warn(missingUrlMessage + '.');
+            grunt.fail.warn(missingUrlMessage + '\n');
           }
           
           grunt.log.warn(missingUrlMessage);
           
-          return;
+          return nextUrl();
         }
         
         var urlFileSize = fs.statSync(urlFullPath)['size'];
         
-        if (options.skipUrlsLargerThan && urlFileSize > units.convert(options.skipUrlsLargerThan + ' to B')) {
-          grunt.log.warn('"' + (grunt.option('verbose') ? urlFullPath : url) + '" is too big');
+        if (isTooBig(urlFileSize, options)) {
+          grunt.log.warn('"' + (isVerbose ? urlFullPath : url) + '" is too big');
           
-          return;
+          return nextUrl();
         }
         
-        var base64Content = fs.readFileSync(urlFullPath, 'base64');
-        var mimeType = mime.lookup(urlFullPath);
-        var dataUri = '("data:' + mimeType + ';base64,' + base64Content + '")';
-        var escapedRawUrl = rawUrl.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-        var rawUrlRegex = '\\([\'"]?' + escapedRawUrl + '[\'"]?\\)';
+        var urlContent = fs.readFileSync(urlFullPath);
         
-        source = source.replace(new RegExp(rawUrlRegex, 'g'), dataUri);
-        
-        grunt.log.ok('"' + rawUrl + '" embedded');
-      });
-      
-      return source;
+        embedUrlAndGoToNext(url, urlContent, fileContent, nextUrl);
+      }
     } catch (e) {
       grunt.log.error(e);
-      grunt.fail.warn('URL embed failed!');
+      grunt.fail.warn('Failed to embed "' + url + '"\n');
     }
   }
+  
+  function processFile(fileSrc, fileDest, options, callback) {
+    try {
+      grunt.log.subhead('Processing source file "' + fileSrc + '"');
+      
+      var fileContent = grunt.file.read(fileSrc);
+      var isVerbose = grunt.option('verbose');
+      var baseDir = path.resolve(options.baseDir ? options.baseDir : path.dirname(fileSrc));
+      var urlRegex = new RegExp(URL_REGEX.source, 'g');
+      var allUrls = [];
+      var urlMatch;
+      
+      while ((urlMatch = urlRegex.exec(fileContent))) {
+        allUrls.push(urlMatch[1]);
+      }
+      
+      var embeddableUrls = allUrls.filter(function(url) { return !url.match(URL_EXCLUDE_REGEX); });
+      
+      if (embeddableUrls.length === 0) {
+        grunt.log.writeln("Nothing to embed here!");
+        return;
+      }
+      
+      if (isVerbose) {
+        grunt.log.writeln('Using "' + baseDir + '" as base directory for URL\'s');
+      }
+      
+      var uniqueEmbeddableUrls = grunt.util._.uniq(embeddableUrls);
+      
+      grunt.log.writeln(uniqueEmbeddableUrls.length + ' embeddable URL' + (uniqueEmbeddableUrls.length > 1 ? "'s" : '') + ' found');
+      
+      var fileContentRef = { content: fileContent };
+      
+      processUrl(fileContentRef, 0, uniqueEmbeddableUrls, options, baseDir, isVerbose, function() {
+        grunt.file.write(fileDest, fileContentRef.content);
+        grunt.log.writeln('File "' + fileDest + '" created');
+      });
+    } catch (e) {
+      grunt.log.error(e);
+      grunt.fail.warn('URL embedding failed\n');
+    }
+  }
+  
+  grunt.registerMultiTask('cssUrlEmbed', "Embed URL's as base64 strings inside your stylesheets", function() {
+    var async = this.async();
+    
+    var options = this.options({
+      failOnMissingUrl: true
+    });
+    
+    var existingFiles = this.files.filter(function(file) {
+      if (!grunt.file.exists(file.src[0])) {
+        return false;
+      }
+      
+      return true;
+    });
+    
+    var leftToProcess = existingFiles.length;
+    
+    existingFiles.forEach(function(file) {
+      processFile(file.src[0], file.dest, options, function() {
+        if (--leftToProcess === 0) {
+          async();
+        }
+      });
+    });
+  });
 };
