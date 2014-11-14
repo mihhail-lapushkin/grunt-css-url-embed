@@ -126,6 +126,9 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.2.0** / 2014-11-14
+   * Merged [#14](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/14).
+   * Updated dependencies.
  * **1.1.0** / 2014-10-01
    * Implemented [#12](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/12).
    * Switched to MIME type sniffing instead of just checking the extension of the file.
