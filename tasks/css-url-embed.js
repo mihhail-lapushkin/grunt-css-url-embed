@@ -150,12 +150,12 @@ module.exports = function(grunt) {
       }
       
       if (isVerbose) {
-        grunt.log.writeln('Using "' + baseDir + '" as base directory for URL\'s');
+        grunt.log.writeln('Using "' + baseDir + '" as base directory for URLs');
       }
       
       var uniqueEmbeddableUrls = grunt.util._.uniq(embeddableUrls);
       
-      grunt.log.writeln(uniqueEmbeddableUrls.length + ' embeddable URL' + (uniqueEmbeddableUrls.length > 1 ? "'s" : '') + ' found');
+      grunt.log.writeln(uniqueEmbeddableUrls.length + ' embeddable URL' + (uniqueEmbeddableUrls.length > 1 ? 's' : '') + ' found');
       
       var fileContentRef = { content: fileContent };
       
@@ -169,7 +169,7 @@ module.exports = function(grunt) {
     }
   }
   
-  grunt.registerMultiTask('cssUrlEmbed', "Embed URL's as base64 strings inside your stylesheets", function() {
+  grunt.registerMultiTask('cssUrlEmbed', "Embed URLs as base64 strings inside your stylesheets", function() {
     var async = this.async();
     
     var options = this.options({

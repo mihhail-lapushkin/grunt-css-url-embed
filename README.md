@@ -3,7 +3,7 @@
 ![](https://badge.fury.io/js/grunt-css-url-embed.svg)&nbsp;&nbsp;
 ![](https://david-dm.org/mihhail-lapushkin/grunt-css-url-embed.png)
 
-> Embed URL's as base64 data URI's inside your stylesheets
+> Embed URLs as base64 data URIs inside your stylesheets
 
 There are lots of base64 embedding Grunt plugins out there, but pretty much all of them are already outdated and/or abandoned. This plugin aims to change that.
 
@@ -26,7 +26,7 @@ grunt.loadNpmTasks('grunt-css-url-embed');
 ## cssUrlEmbed task
 Task targets, files and options may be specified according to the grunt [Configuring tasks](http://gruntjs.com/configuring-tasks) guide.
 
-Both image and font URL's are supported. Remote(http/https) URL's are supported as well.
+Both image and font URLs are supported. Remote(http/https) URLs are supported as well.
 
 ### Options
 
@@ -36,7 +36,7 @@ Type: `String`
 
 Default: `.` or the directory of `Gruntfile.js`
 
-The base directory for URL's. Can be absolute or relative to the directory of your `Gruntfile.js`.
+The base directory for URLs. Can be absolute or relative to the directory of your `Gruntfile.js`.
 
 #### failOnMissingUrl
 
@@ -54,13 +54,13 @@ Type: `String`
 
 Default: No restrictions
 
-Skip URL's that are larger than the specified value.
+Skip URLs that are larger than the specified value.
 
 For example: `'5 MB'`, `'30 KB'`, `'300 B'`.
 
-### Excluding URL's manually
+### Excluding URLs manually
 
-You can mark certain URL's to be skipped by this task using the `/* noembed */` comment.
+You can mark certain URLs to be skipped by this task using the `/* noembed */` comment.
 
 ### Usage Examples
 
@@ -102,7 +102,7 @@ cssUrlEmbed: {
 }
 ```
 
-#### Exclude URL's by size
+#### Exclude URLs by size
 ```js
 cssUrlEmbed: {
   encode: {
@@ -118,7 +118,7 @@ cssUrlEmbed: {
 }
 ```
 
-#### Excluding URL's manually
+#### Excluding URLs manually
 ```css
 .exclude-me {
   background-image: url('exclude_me.png'); /* noembed */
