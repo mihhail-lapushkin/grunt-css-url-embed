@@ -7,33 +7,47 @@ module.exports = function(grunt) {
   var path = require('path');
   var units = require('node-units');
   var request = require('request');
-  var mmmagic = require('mmmagic');
-  var mimeType = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE);
+  var mime = require('mime');
+  
+  var mmmagicMimeType;
+  
+  try {
+    var mmmagic = require('mmmagic');
+    mmmagicMimeType = new mmmagic.Magic(mmmagic.MAGIC_MIME_TYPE);
+  } catch (e) {}
   
   function isTooBig(size, options) {
     return options.skipUrlsLargerThan && size > units.convert(options.skipUrlsLargerThan + ' to B');
   }
   
-  function embedUrlAndGoToNext(url, urlContent, fileContent, nextUrl) {
+  function embedUrlAndGoToNext(url, urlContentInBuffer, mimeType, fileContent, nextUrl) {
+    var base64Content = urlContentInBuffer.toString('base64');
+    var dataUri = '("data:' + mimeType + ';base64,' + base64Content + '")';
+    var escapedUrl = url.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
+    var embedUrlRegex = '\\([\'"]?' + escapedUrl + '[\'"]?\\)';
+    
+    fileContent.content = fileContent.content.replace(new RegExp(embedUrlRegex, 'g'), dataUri);
+    
+    grunt.log.ok('"' + url + '" embedded');
+    
+    nextUrl();
+  }
+  
+  function resolveMimeTypeEmbedUrlAndGoToNext(url, urlContent, fileContent, nextUrl) {
     var urlContentInBuffer = new Buffer(urlContent);
     
-    mimeType.detect(urlContentInBuffer, function(error, mimeType) {
-      if (error) {
-        mimeType = 'application/octet-stream';
-        grunt.log.warn('Failed to get MIME type of "' + url + '". Defaulting to "' + mimeType + '".');
-      }
-      
-      var base64Content = urlContentInBuffer.toString('base64');
-      var dataUri = '("data:' + mimeType + ';base64,' + base64Content + '")';
-      var escapedUrl = url.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-      var embedUrlRegex = '\\([\'"]?' + escapedUrl + '[\'"]?\\)';
-      
-      fileContent.content = fileContent.content.replace(new RegExp(embedUrlRegex, 'g'), dataUri);
-      
-      grunt.log.ok('"' + url + '" embedded');
-      
-      nextUrl();
-    });
+    if (mmmagicMimeType) {
+      mmmagicMimeType.detect(urlContentInBuffer, function(error, mimeType) {
+        if (error) {
+          mimeType = 'application/octet-stream';
+          grunt.log.warn('Failed to get MIME-type of "' + url + '". Defaulting to "' + mimeType + '".');
+        }
+        
+        embedUrlAndGoToNext(url, urlContentInBuffer, mimeType, fileContent, nextUrl);
+      });
+    } else {
+      embedUrlAndGoToNext(url, urlContentInBuffer, mime.lookup(url), fileContent, nextUrl);
+    }
   }
 
   function processNextUrl(fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback) {
@@ -46,8 +60,7 @@ module.exports = function(grunt) {
   
   function processUrl(fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback) {
     var url = urlArray[currentUrlIndex];
-    var nextUrl = processNextUrl.bind(null,
-                                      fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback);
+    var nextUrl = processNextUrl.bind(null, fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback);
     
     try {
       if (isVerbose) {
@@ -78,7 +91,7 @@ module.exports = function(grunt) {
             return nextUrl();
           }
           
-          embedUrlAndGoToNext(url, body, fileContent, nextUrl);
+          resolveMimeTypeEmbedUrlAndGoToNext(url, body, fileContent, nextUrl);
         });
       } else {
         var noArgumentUrl = url;
@@ -119,7 +132,7 @@ module.exports = function(grunt) {
         
         var urlContent = fs.readFileSync(urlFullPath);
         
-        embedUrlAndGoToNext(url, urlContent, fileContent, nextUrl);
+        resolveMimeTypeEmbedUrlAndGoToNext(url, urlContent, fileContent, nextUrl);
       }
     } catch (e) {
       grunt.log.error(e);

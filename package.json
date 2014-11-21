@@ -1,7 +1,7 @@
 {
   "name": "grunt-css-url-embed",
   "description": "Embed URL's as base64 strings inside your stylesheets",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "homepage": "https://github.com/mihhail-lapushkin/grunt-css-url-embed",
   "author": {
     "name": "Mihhail Lapushkin",
@@ -23,9 +23,12 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "mmmagic": "~0.3.8",
+    "mime": "~1.2.11",
     "node-units": "~0.1.5",
     "request": "~2.48.0"
+  },
+  "optionalDependencies": {
+    "mmmagic": "~0.3.8"
   },
   "keywords": [
     "gruntplugin",
