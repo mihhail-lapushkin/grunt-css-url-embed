@@ -175,6 +175,7 @@ module.exports = function(grunt) {
       processUrl(fileContentRef, 0, uniqueEmbeddableUrls, options, baseDir, isVerbose, function() {
         grunt.file.write(fileDest, fileContentRef.content);
         grunt.log.writeln('File "' + fileDest + '" created');
+        callback();
       });
     } catch (e) {
       grunt.log.error(e);
