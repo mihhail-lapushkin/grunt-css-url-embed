@@ -138,7 +138,7 @@ cssUrlEmbed: {
    * Switched to MIME type sniffing instead of just checking the extension of the file.
  * **1.0.4** / 2014-09-26
    * Implemented [#11](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/11).
-   * Marged [#10](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/10).
+   * Merged [#10](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/10).
  * **1.0.3** / 2014-09-05
    * Fixed [#8](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/8).
  * **1.0.2** / 2014-09-03
