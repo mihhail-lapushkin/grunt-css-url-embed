@@ -126,6 +126,9 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.4.0** / 2014-12-27
+   * Merged [#17](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/19).
+   * Updated dependencies.
  * **1.3.1** / 2014-11-22
    * Merged [#17](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/17).
  * **1.3.0** / 2014-11-21
@@ -135,7 +138,7 @@ cssUrlEmbed: {
    * Updated dependencies.
  * **1.1.0** / 2014-10-01
    * Implemented [#12](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/12).
-   * Switched to MIME type sniffing instead of just checking the extension of the file.
+   * Switched to MIME-type sniffing instead of just checking the extension of the file.
  * **1.0.4** / 2014-09-26
    * Implemented [#11](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/11).
    * Merged [#10](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/10).
@@ -158,6 +161,6 @@ cssUrlEmbed: {
    * Changed logging a bit.
  * **0.1.1** / 2013-09-17
    * Removed dependency on [datauri](https://github.com/heldr/datauri).
-   * Now pretty much all MIME types are supported.
+   * Now pretty much all MIME-types are supported.
  * **0.1.0** / 2013-09-09
    * First version.
