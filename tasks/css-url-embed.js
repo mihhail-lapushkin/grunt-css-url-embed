@@ -159,6 +159,7 @@ module.exports = function(grunt) {
       
       if (embeddableUrls.length === 0) {
         grunt.log.writeln("Nothing to embed here!");
+        callback();
         return;
       }
       
