@@ -65,10 +65,8 @@ Type: `Boolean`
 Default: `false`
 
 Specifies the mode of embedding.
-
-`true` (inclusive) means that you have to manually mark each URL that needs to be embedded using the `/* embed */` comment.
-
-`false` (exclusive) means that every URL is embedded, except those that are marked with `/* noembed */` comment.
+* `true` (inclusive) means that you have to manually mark each URL that needs to be embedded using the `/* embed */` comment.
+* `false` (exclusive) means that every URL is embedded, except those that are marked with `/* noembed */` comment.
 
 ### Usage Examples
 
