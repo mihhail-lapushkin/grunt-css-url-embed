@@ -58,9 +58,17 @@ Skip URLs that are larger than the specified value.
 
 For example: `'5 MB'`, `'30 KB'`, `'300 B'`.
 
-### Excluding URLs manually
+#### inclusive
 
-You can mark certain URLs to be skipped by this task using the `/* noembed */` comment.
+Type: `Boolean`
+
+Default: `false`
+
+Specifies the mode of embedding.
+
+`true` (inclusive) means that you have to manually mark each URL that needs to be embedded using the `/* embed */` comment.
+
+`false` (exclusive) means that every URL is embedded, except those that are marked with `/* noembed */` comment.
 
 ### Usage Examples
 
@@ -118,14 +126,23 @@ cssUrlEmbed: {
 }
 ```
 
-#### Excluding URLs manually
+#### Excluding URLs manually (when `inclusive: false`)
 ```css
 .exclude-me {
   background-image: url('exclude_me.png'); /* noembed */
 }
 ```
 
+#### Including URLs manually (when `inclusive: true`)
+```css
+.include-me {
+  background-image: url('include_me.png'); /* embed */
+}
+```
+
 ## Release History
+ * **1.5.0** / 2015-02-12
+   * Added `inclusive` option. See docs.
  * **1.4.0** / 2014-12-27
    * Merged [#17](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/19).
    * Updated dependencies.

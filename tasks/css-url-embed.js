@@ -1,6 +1,8 @@
 module.exports = function(grunt) {
-  var URL_REGEX = /url\(["']?([^"'\(\)]+?)["']?\)[};,\s](?!\s*?\/\*\s*?noembed\s*?\*\/)/;
-  var URL_EXCLUDE_REGEX = /^data:/;
+  var BASE_URL_REGEX = 'url\\(["\']?([^"\'\\(\\)]+?)["\']?\\)[};,\\s]';
+  var EXCLUSIVE_URL_REGEX = BASE_URL_REGEX + '(?!\\s*?\\/\\*\\s*?noembed\\s*?\\*\\/)';
+  var INCLUSIVE_URL_REGEX = BASE_URL_REGEX + '\\s*?\\/\\*\\s*?embed\\s*?\\*\\/';
+  var EMBEDDABLE_URL_REGEX = /^data:/;
   var REMOTE_URL_REGEX = /^(http|https):/;
   
   var fs = require('fs');
@@ -147,7 +149,7 @@ module.exports = function(grunt) {
       var fileContent = grunt.file.read(fileSrc);
       var isVerbose = grunt.option('verbose');
       var baseDir = path.resolve(options.baseDir ? options.baseDir : path.dirname(fileSrc));
-      var urlRegex = new RegExp(URL_REGEX.source, 'g');
+      var urlRegex = new RegExp(options.inclusive ? INCLUSIVE_URL_REGEX : EXCLUSIVE_URL_REGEX, 'g');
       var allUrls = [];
       var urlMatch;
       
@@ -155,7 +157,7 @@ module.exports = function(grunt) {
         allUrls.push(urlMatch[1]);
       }
       
-      var embeddableUrls = allUrls.filter(function(url) { return !url.match(URL_EXCLUDE_REGEX); });
+      var embeddableUrls = allUrls.filter(function(url) { return !url.match(EMBEDDABLE_URL_REGEX); });
       
       if (embeddableUrls.length === 0) {
         grunt.log.writeln("Nothing to embed here!");
@@ -188,7 +190,8 @@ module.exports = function(grunt) {
     var async = this.async();
     
     var options = this.options({
-      failOnMissingUrl: true
+      failOnMissingUrl: true,
+      inclusive: false
     });
     
     var existingFiles = this.files.filter(function(file) {
