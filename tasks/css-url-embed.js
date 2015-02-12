@@ -155,7 +155,14 @@ module.exports = function(grunt) {
         allUrls.push(urlMatch[1]);
       }
       
-      var embeddableUrls = allUrls.filter(function(url) { return !url.match(URL_EXCLUDE_REGEX); });
+      var embeddableUrls = allUrls.filter(function(url) {
+        if(url.match(URL_EXCLUDE_REGEX))
+          return false;
+        if(options.include)
+          return (~options.include.indexOf(url));
+
+        return true;
+      });
       
       if (embeddableUrls.length === 0) {
         grunt.log.writeln("Nothing to embed here!");

@@ -58,6 +58,13 @@ Skip URLs that are larger than the specified value.
 
 For example: `'5 MB'`, `'30 KB'`, `'300 B'`.
 
+#### include
+Type: `Array` of image urls
+
+Default: null
+
+Excludes any images that are not explicitly defined in the include array.
+
 ### Excluding URLs manually
 
 You can mark certain URLs to be skipped by this task using the `/* noembed */` comment.
