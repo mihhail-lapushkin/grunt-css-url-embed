@@ -138,7 +138,21 @@ cssUrlEmbed: {
 }
 ```
 
+#### When URLs are in the middle of CSS property
+```css
+.include-me1 {
+  background: transparent url('include_me.png') /* embed */ center center no-repeat;
+}
+
+.include-me2 {
+  background-image: -webkit-image-set(url('include_me1.png') /* embed */ 1x, url('include_me2.png') /* embed */ 2x);
+}
+```
+
 ## Release History
+ * **1.5.1** / 2015-02-17
+   * Fixed an issue that caused a file without embeddable URLs not to be written to destination folder.
+   * Updated docs to clarify [#21](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/21).
  * **1.5.0** / 2015-02-12
    * Added `inclusive` option. See docs.
  * **1.4.0** / 2014-12-27

@@ -160,9 +160,10 @@ module.exports = function(grunt) {
       var embeddableUrls = allUrls.filter(function(url) { return !url.match(EMBEDDABLE_URL_REGEX); });
       
       if (embeddableUrls.length === 0) {
-        grunt.log.writeln("Nothing to embed here!");
-        callback();
-        return;
+        grunt.file.write(fileDest, fileContent);
+        grunt.log.writeln('Nothing to embed here!');
+        grunt.log.writeln('File "' + fileDest + '" created');
+        return callback();
       }
       
       if (isVerbose) {
