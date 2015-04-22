@@ -205,6 +205,10 @@ module.exports = function(grunt) {
     
     var leftToProcess = existingFiles.length;
     
+    if (leftToProcess === 0) {
+      async();
+    }
+    
     existingFiles.forEach(function(file) {
       processFile(file.src[0], file.dest, options, function() {
         if (--leftToProcess === 0) {
