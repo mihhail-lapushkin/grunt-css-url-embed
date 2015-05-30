@@ -35,10 +35,10 @@ module.exports = function(grunt) {
     nextUrl();
   }
   
-  function resolveMimeTypeEmbedUrlAndGoToNext(url, urlContent, fileContent, nextUrl) {
+  function resolveMimeTypeEmbedUrlAndGoToNext(url, urlContent, fileContent, nextUrl, options) {
     var urlContentInBuffer = new Buffer(urlContent);
     
-    if (mmmagicMimeType) {
+    if (mmmagicMimeType && options.useMimeTypeSniffing) {
       mmmagicMimeType.detect(urlContentInBuffer, function(error, mimeType) {
         if (error) {
           mimeType = 'application/octet-stream';
@@ -93,7 +93,7 @@ module.exports = function(grunt) {
             return nextUrl();
           }
           
-          resolveMimeTypeEmbedUrlAndGoToNext(url, body, fileContent, nextUrl);
+          resolveMimeTypeEmbedUrlAndGoToNext(url, body, fileContent, nextUrl, options);
         });
       } else {
         var noArgumentUrl = url;
@@ -134,7 +134,7 @@ module.exports = function(grunt) {
         
         var urlContent = fs.readFileSync(urlFullPath);
         
-        resolveMimeTypeEmbedUrlAndGoToNext(url, urlContent, fileContent, nextUrl);
+        resolveMimeTypeEmbedUrlAndGoToNext(url, urlContent, fileContent, nextUrl, options);
       }
     } catch (e) {
       grunt.log.error(e);
@@ -192,7 +192,8 @@ module.exports = function(grunt) {
     
     var options = this.options({
       failOnMissingUrl: true,
-      inclusive: false
+      inclusive: false,
+      useMimeTypeSniffing: true
     });
     
     var existingFiles = this.files.filter(function(file) {

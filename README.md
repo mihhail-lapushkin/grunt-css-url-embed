@@ -68,6 +68,16 @@ Specifies the mode of embedding.
 * `true` (inclusive) means that you have to manually mark each URL that needs to be embedded using the `/* embed */` comment.
 * `false` (exclusive) means that every URL is embedded, except those that are marked with `/* noembed */` comment.
 
+#### useMimeTypeSniffing
+
+Type: `Boolean`
+
+Default: `true`
+
+Should we try to use the `mmmagic` MIME-type sniffing library or should we always determine MIME-type only from the extension of the URL?
+
+When set to `false` the extension checking is always used. When set to `true` it will first try use the `mmmagic` library. However, in case the library failed to install it will fallback to extension checking.
+
 ### Usage Examples
 
 #### Map input and output files directly
@@ -124,6 +134,22 @@ cssUrlEmbed: {
 }
 ```
 
+#### Disable MIME-type sniffing in favor of extension checking
+```js
+cssUrlEmbed: {
+  encode: {
+    options: {
+      useMimeTypeSniffing: false
+    },
+  
+    expand: true,
+    cwd: 'target/css',
+    src: [ '**/*.css' ],
+    dest: 'target/css'
+  }
+}
+```
+
 #### Excluding URLs manually (when `inclusive: false`)
 ```css
 .exclude-me {
@@ -150,6 +176,8 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.6.0** / 2015-05-30
+   * Implemented [#24](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/24).
  * **1.5.2** / 2015-04-22
    * Fixed [#23](https://github.com/mihhail-lapushkin/grunt-css-url-embed/issues/23).
  * **1.5.1** / 2015-02-17
