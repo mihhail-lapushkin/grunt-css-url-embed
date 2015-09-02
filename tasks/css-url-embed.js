@@ -61,7 +61,7 @@ module.exports = function(grunt) {
   }
   
   function processUrl(fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback) {
-    var url = urlArray[currentUrlIndex];
+    var url = urlArray[currentUrlIndex].replace(/#.+$/, '');
     var nextUrl = processNextUrl.bind(null, fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback);
     
     try {
