@@ -217,6 +217,8 @@ module.exports = function(grunt) {
             async();
           }
         });
+      } else {
+        async();
       }
     });
   });
