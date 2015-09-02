@@ -211,11 +211,13 @@ module.exports = function(grunt) {
     }
     
     existingFiles.forEach(function(file) {
-      processFile(file.src[0], file.dest, options, function() {
-        if (--leftToProcess === 0) {
-          async();
-        }
-      });
+      if (grunt.file.isFile(file.src[0])) {
+        processFile(file.src[0], file.dest, options, function() {
+          if (--leftToProcess === 0) {
+            async();
+          }
+        });
+      }
     });
   });
 };
