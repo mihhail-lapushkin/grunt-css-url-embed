@@ -123,6 +123,14 @@ module.exports = function(grunt) {
           
           return nextUrl();
         }
+
+        if (!grunt.file.isFile(urlFullPath)) {
+          if (isVerbose) {
+            grunt.log.warn('"' + urlFullPath + '" is a folder');
+          }
+
+          return nextUrl();
+        }
         
         var urlFileSize = fs.statSync(urlFullPath)['size'];
         
