@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-  var BASE_URL_REGEX = 'url\\(["\']?([^"\'\\(\\)]+?)["\']?\\)[};,!\\s]';
+  var BASE_URL_REGEX = 'url\\(\\s*["\']?([^"\'\\(\\)]+?)["\']?\\s*\\)[};,!\\s]';
   var EXCLUSIVE_URL_REGEX = BASE_URL_REGEX + '(?!\\s*?\\/\\*\\s*?noembed\\s*?\\*\\/)';
   var INCLUSIVE_URL_REGEX = BASE_URL_REGEX + '\\s*?\\/\\*\\s*?embed\\s*?\\*\\/';
   var EMBEDDABLE_URL_REGEX = /^data:/;
