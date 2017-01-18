@@ -1,5 +1,5 @@
 module.exports = function(grunt) {
-  var BASE_URL_REGEX = 'url\\(\\s*["\']?([^"\'\\(\\)]+?)["\']?\\s*\\)[};,!\\s]';
+  var BASE_URL_REGEX = 'url\\(\\s*?["\']?([^"\'\\(\\)]+?)["\']?\\s*?\\)[};,!\\s]';
   var EXCLUSIVE_URL_REGEX = BASE_URL_REGEX + '(?!\\s*?\\/\\*\\s*?noembed\\s*?\\*\\/)';
   var INCLUSIVE_URL_REGEX = BASE_URL_REGEX + '\\s*?\\/\\*\\s*?embed\\s*?\\*\\/';
   var EMBEDDABLE_URL_REGEX = /^data:/;
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
     var base64Content = urlContentInBuffer.toString('base64');
     var dataUri = '("data:' + mimeType + ';base64,' + base64Content + '")';
     var escapedUrl = url.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
-    var embedUrlRegex = '\\([\'"]?' + escapedUrl + '[\'"]?\\)';
+    var embedUrlRegex = '\\(\\s*?[\'"]?' + escapedUrl + '[\'"]?\\s*?\\)';
     
     fileContent.content = fileContent.content.replace(new RegExp(embedUrlRegex, 'g'), dataUri);
     
@@ -162,7 +162,7 @@ module.exports = function(grunt) {
       var urlMatch;
       
       while ((urlMatch = urlRegex.exec(fileContent))) {
-        allUrls.push(urlMatch[1]);
+        allUrls.push(urlMatch[1].trim());
       }
       
       var embeddableUrls = allUrls.filter(function(url) { return !url.match(EMBEDDABLE_URL_REGEX); });

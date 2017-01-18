@@ -176,6 +176,8 @@ cssUrlEmbed: {
 ```
 
 ## Release History
+ * **1.9.0** / 2017-01-18
+   * Fixed [#30](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/30).
  * **1.8.0** / 2016-12-01
    * Merged [#29](https://github.com/mihhail-lapushkin/grunt-css-url-embed/pull/29).
  * **1.7.0** / 2016-09-27
