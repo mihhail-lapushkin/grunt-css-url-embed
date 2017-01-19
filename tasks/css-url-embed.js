@@ -106,6 +106,16 @@ module.exports = function(grunt) {
           }
         }
         
+        // Fix url like "url('../fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular')"
+        if (noArgumentUrl.indexOf('#') >= 0) {
+          var noArgumentUrlOld = noArgumentUrl;
+          noArgumentUrl = noArgumentUrl.split('#')[0];
+          
+          if (isVerbose) {
+            grunt.log.writeln('"' + noArgumentUrlOld + '" trimmed to "' + noArgumentUrl + '"');
+          }
+        }
+        
         var urlFullPath = path.resolve(baseDir + '/' + noArgumentUrl);
         
         if (isVerbose) {
