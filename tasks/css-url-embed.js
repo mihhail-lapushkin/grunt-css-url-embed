@@ -98,8 +98,8 @@ module.exports = function(grunt) {
       } else {
         var noArgumentUrl = url;
         
-        if (url.indexOf('?') >= 0) {
-          noArgumentUrl = url.split('?')[0];
+        if (url.indexOf('?') >= 0 || url.indexOf('#') >= 0) {
+          noArgumentUrl = url.split('?')[0].split('#')[0];
           
           if (isVerbose) {
             grunt.log.writeln('"' + url + '" trimmed to "' + noArgumentUrl + '"');
