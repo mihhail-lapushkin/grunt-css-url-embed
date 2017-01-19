@@ -61,7 +61,7 @@ module.exports = function(grunt) {
   }
   
   function processUrl(fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback) {
-    var url = urlArray[currentUrlIndex];
+    var url = urlArray[currentUrlIndex].replace(/#.+$/, '');
     var nextUrl = processNextUrl.bind(null, fileContent, currentUrlIndex, urlArray, options, baseDir, isVerbose, finishCallback);
     
     try {
@@ -219,11 +219,15 @@ module.exports = function(grunt) {
     }
     
     existingFiles.forEach(function(file) {
-      processFile(file.src[0], file.dest, options, function() {
-        if (--leftToProcess === 0) {
-          async();
-        }
-      });
+      if (grunt.file.isFile(file.src[0])) {
+        processFile(file.src[0], file.dest, options, function() {
+          if (--leftToProcess === 0) {
+            async();
+          }
+        });
+      } else {
+        async();
+      }
     });
   });
 };
