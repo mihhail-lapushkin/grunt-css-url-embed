@@ -48,7 +48,7 @@ module.exports = function(grunt) {
         embedUrlAndGoToNext(url, urlContentInBuffer, mimeType, fileContent, nextUrl);
       });
     } else {
-      embedUrlAndGoToNext(url, urlContentInBuffer, mime.lookup(url), fileContent, nextUrl);
+      embedUrlAndGoToNext(url, urlContentInBuffer, mime.getType(url), fileContent, nextUrl);
     }
   }
 
